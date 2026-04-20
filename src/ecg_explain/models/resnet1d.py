@@ -70,9 +70,9 @@ class ResNet1D(nn.Module):
         dropout: float = 0.2,
     ):
         super().__init__()
-        assert len(blocks_per_stage) == len(
-            stage_widths
-        ), "blocks_per_stage and stage_widths must have same length"
+        assert len(blocks_per_stage) == len(stage_widths), (
+            "blocks_per_stage and stage_widths must have same length"
+        )
 
         # Stem: large kernel to capture beat-scale patterns from raw signal
         self.stem = nn.Sequential(
