@@ -1,0 +1,26 @@
+# Baseline config: ResNet1D-medium on PTB-XL @ 100Hz
+# Reproduces the headline result reported in the README.
+
+data:
+  data_dir: data/raw/ptbxl
+  sampling_rate: 100
+  apply_filter: true
+  apply_normalisation: true
+
+model:
+  name: resnet1d_medium
+  n_classes: 5
+  n_leads: 12
+
+training:
+  epochs: 30
+  batch_size: 32
+  lr: 0.001
+  weight_decay: 0.0001
+  early_stopping_patience: 5
+  grad_clip: 1.0
+  seed: 42
+  device: auto              # auto | cpu | mps | cuda
+  num_workers: 0            # keep 0 on macOS to avoid fork issues
+  checkpoint_dir: checkpoints/baseline
+  use_class_weighting: true
