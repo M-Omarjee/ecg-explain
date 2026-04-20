@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.4", "mypy>=1.8", "pre-commit>=3.7"]
+dev = ["pytest>=8.0", "ruff>=0.4", "mypy>=1.8", "pre-commit>=3.7", "types-PyYAML>=6.0"]
 app = ["gradio>=4.0"]
 
 [build-system]
@@ -57,8 +57,3 @@ no_implicit_optional = true
 check_untyped_defs = true
 ignore_missing_imports = true   # third-party libs without stubs (wfdb, etc.)
 files = ["src/ecg_explain"]
-
-[dependency-groups]
-dev = [
-    "types-pyyaml>=6.0.12.20260408",
-]

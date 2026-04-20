@@ -675,10 +675,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "ruff" },
-]
-
-[package.dev-dependencies]
-dev = [
     { name = "types-pyyaml" },
 ]
 
@@ -697,12 +693,10 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.12" },
     { name = "torch", specifier = ">=2.2" },
     { name = "tqdm", specifier = ">=4.66" },
+    { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0" },
     { name = "wfdb", specifier = ">=4.1" },
 ]
 provides-extras = ["dev", "app"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "types-pyyaml", specifier = ">=6.0.12.20260408" }]
 
 [[package]]
 name = "fastapi"
