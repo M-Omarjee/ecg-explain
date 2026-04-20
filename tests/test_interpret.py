@@ -6,6 +6,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 import torch
+
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.models import resnet1d_small
 

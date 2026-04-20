@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 import torch
+
 from ecg_explain.models import (
     BasicBlock1D,
     ResNet1D,

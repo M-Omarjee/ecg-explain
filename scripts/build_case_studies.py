@@ -19,15 +19,15 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
+
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.data.labels import SUPERCLASSES
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.training import get_device
 from ecg_explain.viz import plot_prediction_summary
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
-
 from scripts.train import build_model
 
 

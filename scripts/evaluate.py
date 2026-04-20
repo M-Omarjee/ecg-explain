@@ -15,12 +15,12 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from ecg_explain.config import FullConfig
-from ecg_explain.data import PTBXLDataset
-from ecg_explain.training import compute_all_metrics, get_device
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
+from ecg_explain.config import FullConfig
+from ecg_explain.data import PTBXLDataset
+from ecg_explain.training import compute_all_metrics, get_device
 from scripts.train import build_model
 
 

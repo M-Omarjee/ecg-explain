@@ -8,8 +8,9 @@ matplotlib.use("Agg")  # non-interactive backend, safe for CI
 
 import numpy as np
 import pytest
-from ecg_explain.viz import LEAD_NAMES, plot_12_lead, plot_prediction_summary
 from matplotlib.figure import Figure
+
+from ecg_explain.viz import LEAD_NAMES, plot_12_lead, plot_prediction_summary
 
 
 @pytest.fixture

@@ -11,6 +11,8 @@ import json
 from pathlib import Path
 
 import torch
+from torch.utils.data import DataLoader
+
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.models import resnet1d_medium, resnet1d_small
@@ -20,7 +22,6 @@ from ecg_explain.training import (
     WeightedBCEWithLogitsLoss,
     compute_pos_weight,
 )
-from torch.utils.data import DataLoader
 
 MODEL_REGISTRY = {
     "resnet1d_small": resnet1d_small,

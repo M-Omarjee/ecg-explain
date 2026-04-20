@@ -10,6 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+
 from ecg_explain.data.labels import (
     SUPERCLASS_TO_IDX,
     SUPERCLASSES,

@@ -8,6 +8,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 import torch
+from torch.utils.data import DataLoader, TensorDataset
+
 from ecg_explain.models import resnet1d_small
 from ecg_explain.training import (
     TrainConfig,
@@ -22,7 +24,6 @@ from ecg_explain.training import (
     per_class_f1,
     set_seed,
 )
-from torch.utils.data import DataLoader, TensorDataset
 
 # --- Losses ---
 
