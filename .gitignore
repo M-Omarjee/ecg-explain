@@ -1,0 +1,29 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# ECG data
+data/raw/
+data/processed/
+*.hea
+*.dat
+*.mat
+*.npy
+
+# Models
+checkpoints/
+*.pt
+*.pth
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
