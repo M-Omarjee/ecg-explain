@@ -38,3 +38,12 @@ testpaths = ["tests"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ecg_explain"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+ecg-explain = { workspace = true }
+
+[tool.uv.workspace]
+members = ["."]
