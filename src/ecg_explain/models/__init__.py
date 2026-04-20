@@ -1,4 +1,5 @@
 """Model architectures."""
+
 from ecg_explain.models.resnet1d import (
     BasicBlock1D,
     ResNet1D,

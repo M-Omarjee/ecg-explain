@@ -2,13 +2,12 @@
 
 No real data needed — uses synthetic tensors.
 """
+
 from __future__ import annotations
 
 import numpy as np
 import pytest
 import torch
-from torch.utils.data import DataLoader, TensorDataset
-
 from ecg_explain.models import resnet1d_small
 from ecg_explain.training import (
     TrainConfig,
@@ -23,8 +22,10 @@ from ecg_explain.training import (
     per_class_f1,
     set_seed,
 )
+from torch.utils.data import DataLoader, TensorDataset
 
 # --- Losses ---
+
 
 def test_bce_loss_runs():
     loss_fn = WeightedBCEWithLogitsLoss()
@@ -54,13 +55,14 @@ def test_compute_pos_weight():
 
 # --- Metrics ---
 
+
 def _fake_predictions(n_samples: int = 200, n_classes: int = 5, seed: int = 0):
     rng = np.random.default_rng(seed)
     y_true = rng.integers(0, 2, size=(n_samples, n_classes))
     # Bias scores toward truth so AUROC > 0.5
-    y_score = y_true * rng.uniform(0.5, 1.0, size=y_true.shape) + (
-        1 - y_true
-    ) * rng.uniform(0.0, 0.5, size=y_true.shape)
+    y_score = y_true * rng.uniform(0.5, 1.0, size=y_true.shape) + (1 - y_true) * rng.uniform(
+        0.0, 0.5, size=y_true.shape
+    )
     return y_true, y_score
 
 
@@ -105,6 +107,7 @@ def test_per_class_auroc_handles_empty_class():
 
 # --- Device + seed ---
 
+
 def test_get_device_cpu():
     assert get_device("cpu").type == "cpu"
 
@@ -123,6 +126,7 @@ def test_set_seed_makes_torch_reproducible():
 
 
 # --- Trainer end-to-end on tiny synthetic data ---
+
 
 @pytest.fixture
 def tiny_loaders():

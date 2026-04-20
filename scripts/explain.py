@@ -8,19 +8,20 @@ Usage:
         --target-class MI \\
         --output figures/explain_record0_MI.png
 """
+
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
 import torch
-
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.data.labels import SUPERCLASS_TO_IDX, SUPERCLASSES
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.training import get_device
 from ecg_explain.viz import plot_prediction_summary
+
 from scripts.train import build_model
 
 
@@ -48,8 +49,10 @@ def main(
         apply_normalisation=cfg.data["apply_normalisation"],
     )
     signal, labels = ds[record_idx]
-    print(f"Record idx {record_idx} ({split}) — true labels: "
-          f"{[c for c, v in zip(SUPERCLASSES, labels.tolist(), strict=True) if v > 0]}")
+    print(
+        f"Record idx {record_idx} ({split}) — true labels: "
+        f"{[c for c, v in zip(SUPERCLASSES, labels.tolist(), strict=True) if v > 0]}"
+    )
 
     # Model + checkpoint
     model = build_model(cfg.model).to(device)

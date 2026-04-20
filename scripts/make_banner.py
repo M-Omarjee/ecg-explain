@@ -2,6 +2,7 @@
 
 Output: figures/banner.png
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -78,9 +79,15 @@ def make_banner(out_path: Path) -> None:
         ax.set_yticks([])
         ax.set_facecolor("#0d1117")
         ax.text(
-            -0.02, 0.5, name, transform=ax.transAxes,
-            color="white", fontsize=12, fontweight="bold",
-            ha="right", va="center",
+            -0.02,
+            0.5,
+            name,
+            transform=ax.transAxes,
+            color="white",
+            fontsize=12,
+            fontweight="bold",
+            ha="right",
+            va="center",
         )
         for spine in ax.spines.values():
             spine.set_visible(False)
@@ -90,7 +97,10 @@ def make_banner(out_path: Path) -> None:
 
     fig.suptitle(
         "ECG-Explain — 12-lead classifier with per-lead Grad-CAM",
-        color="white", fontsize=14, fontweight="bold", y=0.98,
+        color="white",
+        fontsize=14,
+        fontweight="bold",
+        y=0.98,
     )
     fig.tight_layout()
 

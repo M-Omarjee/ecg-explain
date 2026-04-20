@@ -12,6 +12,7 @@ Run locally:
 
 Deploy: this is the entry point Hugging Face Spaces will run.
 """
+
 from __future__ import annotations
 
 import os
@@ -53,6 +54,7 @@ DEVICE = torch.device("cpu")  # Spaces free tier is CPU-only
 
 # --- Model + Grad-CAM (loaded once at startup) ---
 
+
 def _resolve_checkpoint() -> Path | None:
     """Return a local path to the checkpoint, downloading from HF Hub if needed."""
     if CHECKPOINT_PATH.exists():
@@ -60,10 +62,9 @@ def _resolve_checkpoint() -> Path | None:
     if HF_MODEL_REPO:
         try:
             from huggingface_hub import hf_hub_download
+
             print(f"Fetching {HF_CKPT_FILENAME} from HF Hub repo {HF_MODEL_REPO}...")
-            return Path(
-                hf_hub_download(repo_id=HF_MODEL_REPO, filename=HF_CKPT_FILENAME)
-            )
+            return Path(hf_hub_download(repo_id=HF_MODEL_REPO, filename=HF_CKPT_FILENAME))
         except Exception as e:
             print(f"HF Hub download failed: {e}")
     return None
@@ -89,6 +90,7 @@ MODEL, CAM = load_model()
 
 
 # --- Inference ---
+
 
 def load_record(record_path: Path) -> np.ndarray:
     """Load a WFDB record and return (12, n_samples) float32 signal."""
@@ -118,7 +120,7 @@ def predict_and_explain(
             f"Expected 12 leads, got shape {raw.shape}.",
         )
 
-    processed = preprocess_ecg(raw, fs=SAMPLING_RATE)        # (n_samples, 12)
+    processed = preprocess_ecg(raw, fs=SAMPLING_RATE)  # (n_samples, 12)
     signal_t = torch.from_numpy(processed.T).float().unsqueeze(0).to(DEVICE)
 
     # Predictions
@@ -156,6 +158,7 @@ def _placeholder_figure(message: str) -> plt.Figure:
 
 
 # --- Gradio UI ---
+
 
 def gather_examples() -> list[list[str]]:
     """Find example records bundled with the app, if any."""

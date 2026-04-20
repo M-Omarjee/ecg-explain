@@ -11,6 +11,7 @@ Usage:
         --config configs/baseline.yaml \\
         --checkpoint checkpoints/baseline/best.pt
 """
+
 from __future__ import annotations
 
 import argparse
@@ -18,15 +19,15 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
-
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.data.labels import SUPERCLASSES
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.training import get_device
 from ecg_explain.viz import plot_prediction_summary
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
+
 from scripts.train import build_model
 
 
@@ -43,9 +44,7 @@ def collect_all_predictions(model, loader, device):
     return targets, 1 / (1 + np.exp(-logits))  # sigmoid
 
 
-def pick_best_correct_per_class(
-    y_true: np.ndarray, y_score: np.ndarray
-) -> dict[str, int]:
+def pick_best_correct_per_class(y_true: np.ndarray, y_score: np.ndarray) -> dict[str, int]:
     """For each class, find the most confident correct prediction (positive class)."""
     picks: dict[str, int] = {}
     for i, cls in enumerate(SUPERCLASSES):
@@ -178,8 +177,7 @@ def main(config_path: str, checkpoint_path: str, out_dir: str) -> None:
             cam=cam,
             target_class=first_pred,
             title_prefix=(
-                f"Case study: failure (test idx {idx}) — "
-                f"predicted [{pred_str}], true [{true_str}]"
+                f"Case study: failure (test idx {idx}) — predicted [{pred_str}], true [{true_str}]"
             ),
             out_path=out_dir / "failure_high_confidence.png",
             sampling_rate=cfg.data["sampling_rate"],

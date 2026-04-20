@@ -3,13 +3,13 @@
 Tests that don't need the full PTB-XL download. Dataset integration tests
 are gated behind a skipif so CI passes without the dataset present.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
 
 import numpy as np
 import pytest
-
 from ecg_explain.data.labels import (
     SUPERCLASS_TO_IDX,
     SUPERCLASSES,

@@ -1,4 +1,5 @@
 """Smoke tests for visualisation. Render figures to memory, no display needed."""
+
 from __future__ import annotations
 
 import matplotlib
@@ -7,9 +8,8 @@ matplotlib.use("Agg")  # non-interactive backend, safe for CI
 
 import numpy as np
 import pytest
-from matplotlib.figure import Figure
-
 from ecg_explain.viz import LEAD_NAMES, plot_12_lead, plot_prediction_summary
+from matplotlib.figure import Figure
 
 
 @pytest.fixture
@@ -43,7 +43,5 @@ def test_plot_12_lead_rejects_wrong_shape():
 def test_plot_prediction_summary_runs(fake_ecg):
     probs = {"NORM": 0.1, "MI": 0.8, "STTC": 0.2, "CD": 0.05, "HYP": 0.1}
     heatmap = np.linspace(0, 1, 1000)
-    fig = plot_prediction_summary(
-        fake_ecg, probabilities=probs, heatmap=heatmap, target_class="MI"
-    )
+    fig = plot_prediction_summary(fake_ecg, probabilities=probs, heatmap=heatmap, target_class="MI")
     assert isinstance(fig, Figure)

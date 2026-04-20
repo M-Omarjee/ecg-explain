@@ -2,6 +2,7 @@
 
 Plain PyTorch — no Lightning, no Hydra. Apple Silicon (MPS) supported.
 """
+
 from __future__ import annotations
 
 import json
@@ -214,14 +215,18 @@ class Trainer:
             else:
                 epochs_since_improvement += 1
                 if epochs_since_improvement >= self.config.early_stopping_patience:
-                    print(f"Early stopping at epoch {epoch} (no improvement for "
-                          f"{self.config.early_stopping_patience} epochs)")
+                    print(
+                        f"Early stopping at epoch {epoch} (no improvement for "
+                        f"{self.config.early_stopping_patience} epochs)"
+                    )
                     break
 
         self._save_checkpoint("last", epoch, val_auroc)
         with open(self.checkpoint_dir / "history.json", "w") as f:
             json.dump(self.history.to_dict(), f, indent=2)
 
-        print(f"\nBest val AUROC: {self.history.best_val_auroc:.4f} "
-              f"at epoch {self.history.best_epoch}")
+        print(
+            f"\nBest val AUROC: {self.history.best_val_auroc:.4f} "
+            f"at epoch {self.history.best_epoch}"
+        )
         return self.history

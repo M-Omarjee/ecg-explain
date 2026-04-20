@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.4"]
+dev = ["pytest>=8.0", "ruff>=0.4", "mypy>=1.8", "pre-commit>=3.7"]
 app = ["gradio>=4.0"]
 
 [build-system]
@@ -47,3 +47,18 @@ ecg-explain = { workspace = true }
 
 [tool.uv.workspace]
 members = ["."]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+check_untyped_defs = true
+ignore_missing_imports = true   # third-party libs without stubs (wfdb, etc.)
+files = ["src/ecg_explain"]
+
+[dependency-groups]
+dev = [
+    "types-pyyaml>=6.0.12.20260408",
+]

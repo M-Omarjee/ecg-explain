@@ -1,4 +1,5 @@
 """PyTorch Dataset for PTB-XL."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -45,9 +46,7 @@ class PTBXLDataset(Dataset):
         self.apply_filter = apply_filter
         self.apply_normalisation = apply_normalisation
 
-        metadata = pd.read_csv(
-            self.data_dir / "ptbxl_database.csv", index_col="ecg_id"
-        )
+        metadata = pd.read_csv(self.data_dir / "ptbxl_database.csv", index_col="ecg_id")
         scp_mapping = load_scp_mapping(self.data_dir / "scp_statements.csv")
 
         if split == "train":
@@ -59,9 +58,7 @@ class PTBXLDataset(Dataset):
         else:
             raise ValueError(f"Unknown split: {split!r}")
 
-        labels = np.stack(
-            [scp_to_superclass_labels(s, scp_mapping) for s in metadata.scp_codes]
-        )
+        labels = np.stack([scp_to_superclass_labels(s, scp_mapping) for s in metadata.scp_codes])
 
         # Drop records with no superclass label assigned
         keep = labels.sum(axis=1) > 0

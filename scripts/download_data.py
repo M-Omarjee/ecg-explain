@@ -1,4 +1,5 @@
 """Download PTB-XL from PhysioNet (100Hz only, skipping 500Hz to save ~2GB)."""
+
 from __future__ import annotations
 
 import shutil
@@ -24,14 +25,16 @@ def download_ptbxl() -> None:
 
     cmd = [
         "wget",
-        "-r",                                       # recursive
-        "-N",                                       # only fetch newer files
-        "-c",                                       # resume partial downloads
-        "-np",                                      # no parent directories
-        "-nH",                                      # no host directories
-        "--cut-dirs=3",                             # strip /files/ptb-xl/1.0.3
-        "-X", "/files/ptb-xl/1.0.3/records500",    # skip 500Hz files
-        "-P", str(DATA_DIR),
+        "-r",  # recursive
+        "-N",  # only fetch newer files
+        "-c",  # resume partial downloads
+        "-np",  # no parent directories
+        "-nH",  # no host directories
+        "--cut-dirs=3",  # strip /files/ptb-xl/1.0.3
+        "-X",
+        "/files/ptb-xl/1.0.3/records500",  # skip 500Hz files
+        "-P",
+        str(DATA_DIR),
         PTBXL_URL,
     ]
     print(f"Downloading PTB-XL (100Hz) to {DATA_DIR}/")

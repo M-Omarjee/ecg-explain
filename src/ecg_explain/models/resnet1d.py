@@ -9,6 +9,7 @@ Architecture inspired by the strongest baseline in Strodthoff et al. 2020
 Input:  (batch, 12, n_samples)  — 12 leads, n_samples=1000 at 100Hz
 Output: (batch, n_classes)       — raw logits (apply sigmoid for probabilities)
 """
+
 from __future__ import annotations
 
 import torch
@@ -39,6 +40,7 @@ class BasicBlock1D(nn.Module):
         self.relu = nn.ReLU(inplace=True)
 
         # Project shortcut if shape changes
+        self.shortcut: nn.Module
         if stride != 1 or in_ch != out_ch:
             self.shortcut = nn.Conv1d(in_ch, out_ch, kernel_size=1, stride=stride, bias=False)
         else:
@@ -68,9 +70,9 @@ class ResNet1D(nn.Module):
         dropout: float = 0.2,
     ):
         super().__init__()
-        assert len(blocks_per_stage) == len(stage_widths), (
-            "blocks_per_stage and stage_widths must have same length"
-        )
+        assert len(blocks_per_stage) == len(
+            stage_widths
+        ), "blocks_per_stage and stage_widths must have same length"
 
         # Stem: large kernel to capture beat-scale patterns from raw signal
         self.stem = nn.Sequential(
@@ -95,9 +97,7 @@ class ResNet1D(nn.Module):
         ):
             for block_idx in range(n_blocks):
                 stride = 2 if (stage_idx > 0 and block_idx == 0) else 1
-                stages.append(
-                    BasicBlock1D(in_ch, width, kernel_size=kernel_size, stride=stride)
-                )
+                stages.append(BasicBlock1D(in_ch, width, kernel_size=kernel_size, stride=stride))
                 in_ch = width
         self.stages = nn.Sequential(*stages)
 
@@ -140,6 +140,7 @@ class ResNet1D(nn.Module):
 
 
 # --- Factory functions for common sizes ---
+
 
 def resnet1d_small(n_classes: int = 5, n_leads: int = 12) -> ResNet1D:
     """~1.5M params. Fast iteration."""

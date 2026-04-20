@@ -1,9 +1,9 @@
 """Model architecture tests. No data needed — uses random tensors."""
+
 from __future__ import annotations
 
 import pytest
 import torch
-
 from ecg_explain.models import (
     BasicBlock1D,
     ResNet1D,
@@ -14,6 +14,7 @@ from ecg_explain.models import (
 
 # --- Fixtures ---
 
+
 @pytest.fixture
 def dummy_batch() -> torch.Tensor:
     """A batch of 4 random 'ECGs': 12 leads, 1000 samples (10s at 100Hz)."""
@@ -21,6 +22,7 @@ def dummy_batch() -> torch.Tensor:
 
 
 # --- BasicBlock1D ---
+
 
 def test_basic_block_preserves_shape_when_no_stride():
     block = BasicBlock1D(in_ch=32, out_ch=32, stride=1)
@@ -44,6 +46,7 @@ def test_basic_block_changes_channels():
 
 
 # --- ResNet1D forward pass ---
+
 
 def test_resnet_small_forward_shape(dummy_batch):
     model = resnet1d_small()
@@ -74,6 +77,7 @@ def test_resnet_outputs_are_logits(dummy_batch):
 
 # --- Feature maps for Grad-CAM ---
 
+
 def test_feature_maps_shape(dummy_batch):
     """Grad-CAM needs (batch, channels, time) feature maps."""
     model = resnet1d_medium()
@@ -84,6 +88,7 @@ def test_feature_maps_shape(dummy_batch):
 
 
 # --- Backward pass (gradients flow) ---
+
 
 def test_backward_pass_runs(dummy_batch):
     model = resnet1d_medium()
@@ -96,6 +101,7 @@ def test_backward_pass_runs(dummy_batch):
 
 
 # --- Param count sanity ---
+
 
 def test_small_smaller_than_medium():
     assert count_parameters(resnet1d_small()) < count_parameters(resnet1d_medium())

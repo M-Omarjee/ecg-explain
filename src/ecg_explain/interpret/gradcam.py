@@ -11,6 +11,7 @@ Usage:
     cam = GradCAM1D(model)
     heatmap = cam(signal_tensor, target_class=1)  # MI
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -30,8 +31,7 @@ class GradCAM1D:
         self.model = model
         if not hasattr(model, "feature_maps"):
             raise AttributeError(
-                "Model must expose a `feature_maps(x)` method "
-                "(see ecg_explain.models.ResNet1D)."
+                "Model must expose a `feature_maps(x)` method (see ecg_explain.models.ResNet1D)."
             )
 
     def __call__(
@@ -64,23 +64,23 @@ class GradCAM1D:
 
         # Forward pass through stem + stages, then through the head separately
         # so we can grab feature maps with grad enabled.
-        feats = self.model.feature_maps(signal)            # (1, C, T')
+        feats = self.model.feature_maps(signal)  # type: ignore[operator]
         feats.retain_grad()
 
-        pooled = F.adaptive_avg_pool1d(feats, 1).squeeze(-1)   # (1, C)
-        pooled = self.model.dropout(pooled)
-        logits = self.model.classifier(pooled)             # (1, n_classes)
+        pooled = F.adaptive_avg_pool1d(feats, 1).squeeze(-1)  # (1, C)
+        pooled = self.model.dropout(pooled)  # type: ignore[operator]
+        logits = self.model.classifier(pooled)  # type: ignore[operator]
 
         # Backward pass for the chosen class only
         self.model.zero_grad()
         logits[0, target_class].backward()
 
         # Channel importance = global-avg-pooled gradient
-        grads = feats.grad                                 # (1, C, T')
-        weights = grads.mean(dim=2, keepdim=True)          # (1, C, 1)
+        grads = feats.grad  # (1, C, T')
+        weights = grads.mean(dim=2, keepdim=True)  # (1, C, 1)
 
         # Weighted sum across channels, then ReLU
-        cam = (weights * feats).sum(dim=1, keepdim=True)   # (1, 1, T')
+        cam = (weights * feats).sum(dim=1, keepdim=True)  # (1, 1, T')
         cam = F.relu(cam)
 
         # Upsample back to signal length

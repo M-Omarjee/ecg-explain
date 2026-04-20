@@ -4,6 +4,7 @@ PTB-XL annotates each ECG with one or more SCP-ECG statements (e.g. 'IMI',
 'ASMI', 'NORM'). For the standard 5-class benchmark, these are aggregated
 into 5 diagnostic superclasses: NORM, MI, STTC, CD, HYP.
 """
+
 from __future__ import annotations
 
 import ast

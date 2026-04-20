@@ -6,6 +6,7 @@ Usage:
         --checkpoint checkpoints/baseline/best.pt \\
         --output results/baseline_test_metrics.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -14,12 +15,12 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
-
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.training import compute_all_metrics, get_device
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
+
 from scripts.train import build_model
 
 
@@ -63,8 +64,10 @@ def main(config_path: str, checkpoint_path: str, output_path: str) -> None:
     model = build_model(cfg.model).to(device)
     ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
-    print(f"Loaded checkpoint from {checkpoint_path} (epoch {ckpt['epoch']}, "
-          f"val_AUROC={ckpt['val_macro_auroc']:.4f})")
+    print(
+        f"Loaded checkpoint from {checkpoint_path} (epoch {ckpt['epoch']}, "
+        f"val_AUROC={ckpt['val_macro_auroc']:.4f})"
+    )
 
     # Eval
     y_true, y_score = collect_predictions(model, test_loader, device)

@@ -1,4 +1,5 @@
 """Config loading from YAML."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -11,6 +12,7 @@ import yaml
 @dataclass
 class FullConfig:
     """Top-level config, loaded from YAML."""
+
     data: dict[str, Any]
     model: dict[str, Any]
     training: dict[str, Any]

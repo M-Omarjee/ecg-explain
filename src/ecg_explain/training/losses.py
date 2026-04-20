@@ -1,4 +1,5 @@
 """Loss functions for multi-label ECG classification."""
+
 from __future__ import annotations
 
 import torch
@@ -25,8 +26,9 @@ class WeightedBCEWithLogitsLoss(nn.Module):
         )
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+        pos_weight = self.pos_weight if isinstance(self.pos_weight, torch.Tensor) else None
         return nn.functional.binary_cross_entropy_with_logits(
-            logits, targets, pos_weight=self.pos_weight
+            logits, targets, pos_weight=pos_weight
         )
 
 

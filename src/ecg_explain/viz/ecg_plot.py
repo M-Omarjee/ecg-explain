@@ -1,4 +1,5 @@
 """Clinical-style 12-lead ECG plotting with optional Grad-CAM overlays."""
+
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
@@ -6,8 +7,7 @@ import numpy as np
 from matplotlib.figure import Figure
 
 # Standard 12-lead ordering used in PTB-XL
-LEAD_NAMES = ["I", "II", "III", "aVR", "aVL", "aVF",
-              "V1", "V2", "V3", "V4", "V5", "V6"]
+LEAD_NAMES = ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
 
 
 def plot_12_lead(
@@ -39,10 +39,10 @@ def plot_12_lead(
 
     # Order leads down columns: I, II, III, aVR, aVL, aVF | V1..V6
     col_order = [
-        [0, 6],   # I,    V1
-        [1, 7],   # II,   V2
-        [2, 8],   # III,  V3
-        [3, 9],   # aVR,  V4
+        [0, 6],  # I,    V1
+        [1, 7],  # II,   V2
+        [2, 8],  # III,  V3
+        [3, 9],  # aVR,  V4
         [4, 10],  # aVL,  V5
         [5, 11],  # aVF,  V6
     ]
@@ -52,8 +52,14 @@ def plot_12_lead(
             lead_idx = col_order[row][col]
             ax = axes[row, col]
             ax.plot(t, signal[lead_idx], color="black", linewidth=0.8)
-            ax.set_ylabel(LEAD_NAMES[lead_idx], rotation=0, ha="right",
-                          va="center", fontsize=10, fontweight="bold")
+            ax.set_ylabel(
+                LEAD_NAMES[lead_idx],
+                rotation=0,
+                ha="right",
+                va="center",
+                fontsize=10,
+                fontweight="bold",
+            )
             ax.grid(True, which="both", color="lightgray", linewidth=0.4)
             ax.set_yticks([])
             for spine in ("top", "right"):
@@ -99,6 +105,4 @@ def plot_prediction_summary(
     title = f"Predictions: {pred_str}"
     if target_class:
         title = f"Grad-CAM for {target_class}\n{title}"
-    return plot_12_lead(
-        signal, sampling_rate=sampling_rate, heatmap=heatmap, title=title
-    )
+    return plot_12_lead(signal, sampling_rate=sampling_rate, heatmap=heatmap, title=title)
