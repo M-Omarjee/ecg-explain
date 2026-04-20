@@ -39,22 +39,48 @@ from ecg_explain.viz import plot_prediction_summary  # noqa: E402
 
 # --- Config (override with env vars on Spaces) ---
 
+# Local path for the checkpoint. If absent, we try to download from HF Hub.
 CHECKPOINT_PATH = Path(os.environ.get("CKPT_PATH", "checkpoints/baseline/best.pt"))
+
+# Hugging Face Hub model repo (set this once you've uploaded weights):
+#   format "username/repo-name", e.g. "M-Omarjee/ecg-explain-resnet1d"
+HF_MODEL_REPO = os.environ.get("HF_MODEL_REPO", "")
+HF_CKPT_FILENAME = os.environ.get("HF_CKPT_FILENAME", "best.pt")
+
 EXAMPLES_DIR = Path(os.environ.get("EXAMPLES_DIR", "app/examples"))
 SAMPLING_RATE = 100
 DEVICE = torch.device("cpu")  # Spaces free tier is CPU-only
 
 # --- Model + Grad-CAM (loaded once at startup) ---
 
+def _resolve_checkpoint() -> Path | None:
+    """Return a local path to the checkpoint, downloading from HF Hub if needed."""
+    if CHECKPOINT_PATH.exists():
+        return CHECKPOINT_PATH
+    if HF_MODEL_REPO:
+        try:
+            from huggingface_hub import hf_hub_download
+            print(f"Fetching {HF_CKPT_FILENAME} from HF Hub repo {HF_MODEL_REPO}...")
+            return Path(
+                hf_hub_download(repo_id=HF_MODEL_REPO, filename=HF_CKPT_FILENAME)
+            )
+        except Exception as e:
+            print(f"HF Hub download failed: {e}")
+    return None
+
+
 def load_model() -> tuple[torch.nn.Module, GradCAM1D]:
     model = resnet1d_medium(n_classes=5, n_leads=12)
-    if CHECKPOINT_PATH.exists():
-        ckpt = torch.load(CHECKPOINT_PATH, map_location=DEVICE, weights_only=False)
+    ckpt_path = _resolve_checkpoint()
+    if ckpt_path is not None:
+        ckpt = torch.load(ckpt_path, map_location=DEVICE, weights_only=False)
         model.load_state_dict(ckpt["model_state"])
-        print(f"Loaded checkpoint: {CHECKPOINT_PATH}")
+        print(f"Loaded checkpoint: {ckpt_path}")
     else:
-        print(f"WARNING: checkpoint not found at {CHECKPOINT_PATH}. "
-              "Demo is running with a randomly initialised model.")
+        print(
+            "WARNING: no checkpoint found locally or on HF Hub. "
+            "Demo is running with a randomly initialised model."
+        )
     model.to(DEVICE).eval()
     return model, GradCAM1D(model)
 
