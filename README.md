@@ -175,8 +175,6 @@ model, please cite:
 
 MIT. See [LICENSE](LICENSE).
 
-## About the author
-
 <div align="center">
 
 Built by [Muhammed Omarjee](https://github.com/M-Omarjee), Resident Doctor (MBBS, King's College London).
