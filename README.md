@@ -74,35 +74,120 @@ _Numbers will be filled in after the first headline training run. See
 ## Case studies
 
 The model interpreting six representative test set ECGs. Heatmap intensity
-indicates Grad-CAM attribution for the named class.
+indicates Grad-CAM attribution for the named class. _Captions reflect my
+clinical reading alongside what the model attended to — to be finalised
+once the model is trained._
 
-| | |
-|---|---|
-| ![Correct NORM](figures/case_studies/correct_NORM.png) | ![Correct MI](figures/case_studies/correct_MI.png) |
-| _Normal sinus rhythm — model attends evenly across the cardiac cycle._ | _Inferior MI — model focuses on ST segments in II/III/aVF._ |
-| ![Correct STTC](figures/case_studies/correct_STTC.png) | ![Correct CD](figures/case_studies/correct_CD.png) |
-| _ST/T changes — attention concentrated on the T-wave region._ | _Conduction disturbance — attention on the QRS complex._ |
-| ![Correct HYP](figures/case_studies/correct_HYP.png) | ![Failure case](figures/case_studies/failure_high_confidence.png) |
-| _LV hypertrophy — attention on QRS amplitude in V-leads._ | _High-confidence failure — discussed in the failure analysis below._ |
+### Correct: Normal sinus rhythm
+![Correct NORM](figures/case_studies/correct_NORM.png)
 
-> Captions will be expanded with my own clinical reading after the first
-> training run, including discussion of where attention does and doesn't
-> match the expected anatomical region for each class.
+> **Predicted:** NORM — _confidence to be filled in_
+> **True label:** NORM
+> **Attention falls on:** _to be described after training_
+> **Clinical reading:** _to be added — expected attention to be diffuse,
+> with no concentration on any pathological feature._
+
+### Correct: Myocardial infarction
+![Correct MI](figures/case_studies/correct_MI.png)
+
+> **Predicted:** MI — _confidence to be filled in_
+> **True label:** MI
+> **Attention falls on:** _to be described — expected to localise on the ST
+> segment in the inferior leads (II, III, aVF) for inferior MI, or anterior
+> leads (V2-V4) for anterior MI._
+> **Clinical reading:** _to be added._
+
+### Correct: ST/T changes
+![Correct STTC](figures/case_studies/correct_STTC.png)
+
+> **Predicted:** STTC — _confidence to be filled in_
+> **True label:** STTC
+> **Attention falls on:** _to be described — expected to focus on the
+> repolarisation phase (T-wave region)._
+> **Clinical reading:** _to be added._
+
+### Correct: Conduction disturbance
+![Correct CD](figures/case_studies/correct_CD.png)
+
+> **Predicted:** CD — _confidence to be filled in_
+> **True label:** CD
+> **Attention falls on:** _to be described — expected to focus on the QRS
+> complex, particularly its duration and morphology._
+> **Clinical reading:** _to be added._
+
+### Correct: Hypertrophy
+![Correct HYP](figures/case_studies/correct_HYP.png)
+
+> **Predicted:** HYP — _confidence to be filled in_
+> **True label:** HYP
+> **Attention falls on:** _to be described — expected to focus on QRS
+> amplitude in the precordial leads (V-leads), reflecting voltage criteria
+> for hypertrophy._
+> **Clinical reading:** _to be added._
+
+### Failure: high-confidence wrong prediction
+![Failure case](figures/case_studies/failure_high_confidence.png)
+
+> **Predicted:** _to be filled in_
+> **True label:** _to be filled in_
+> **Attention falls on:** _to be described._
+> **Why it failed:** _to be analysed — was attention on the right region
+> but interpretation wrong, or was attention on a clinically irrelevant
+> region?_
+> **What this teaches us:** _to be added._
 
 ## Failure analysis
-
-_To be written after the first training run. Will include:_
-
-- Which classes the model is least reliable on
-- Whether attention falls on clinically appropriate regions even when the
-  classification is wrong
-- Specific MI subtypes the model struggles with (anterior vs inferior vs
-  posterior, subtle vs overt)
-- Recommendations for how a clinician should and shouldn't use the output
 
 This section is the unfair advantage of having a doctor build the model. It's
 also what would have to exist before any version of this could be used in
 practice.
+
+### Per-class reliability
+
+_To be filled in after training._ Will report which classes are most and
+least reliable, with per-class AUROC and F1 alongside qualitative comments.
+
+| Class  | AUROC | F1 | Reliability notes |
+|--------|-------|----|-------------------|
+| NORM   | _TBD_ | _TBD_ | _e.g. "very reliable — when model says normal, it usually is"_ |
+| MI     | _TBD_ | _TBD_ | _e.g. "good at obvious STEMI, struggles with subtle inferior changes"_ |
+| STTC   | _TBD_ | _TBD_ | _to be added_ |
+| CD     | _TBD_ | _TBD_ | _to be added_ |
+| HYP    | _TBD_ | _TBD_ | _to be added_ |
+
+### Attention concordance
+
+For each class, does the model's Grad-CAM attention fall on the
+*anatomically correct region* — the ST segment for MI, the QRS for CD, etc?
+
+_To be quantified after training, by computing the fraction of total
+attribution mass falling within the expected lead region per class._
+
+### Subtype analysis
+
+Within MI specifically:
+
+- **Anterior vs inferior vs posterior** — _to be analysed; PTB-XL has
+  enough subclass annotation to break this down._
+- **Subtle vs overt presentations** — _to be analysed by stratifying on
+  diagnostic likelihood (PTB-XL provides this)._
+
+### How a clinician should and should not use this
+
+**Appropriate uses:**
+
+- Educational exploration of how a model interprets ECG morphology
+- Hypothesis generation for what features matter for a diagnosis
+- A second-look prompt to consider whether the model's flagged region
+  warrants closer attention
+
+**Inappropriate uses:**
+
+- Sole or primary basis for clinical decisions
+- Replacement for cardiologist review of any ECG
+- Use on populations or equipment not represented in PTB-XL without
+  re-validation
+- Use in any acute or time-critical setting
 
 ## Installation
 
