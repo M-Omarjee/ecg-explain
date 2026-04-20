@@ -5,9 +5,13 @@
 > diagnosis. Built by a doctor who needed to trust the model before trusting
 > the output.
 
+<div align="center">
+
 [![CI](https://github.com/M-Omarjee/ecg-explain/actions/workflows/ci.yml/badge.svg)](https://github.com/M-Omarjee/ecg-explain/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+</div>
 
 ## Motivation
 
@@ -138,6 +142,7 @@ uv run python app/app.py
 
 ## Project structure
 
+```
 ecg-explain/
 ├── src/ecg_explain/
 │   ├── data/         # PTB-XL loading, label mapping, preprocessing
@@ -150,6 +155,7 @@ ecg-explain/
 ├── scripts/          # CLI entry points
 ├── tests/            # ~50 tests, no real data required for most
 └── .github/workflows/  # CI: lint + test on every push
+```
 
 ## Model card
 
@@ -171,6 +177,10 @@ MIT. See [LICENSE](LICENSE).
 
 ## About the author
 
-Built by [Muhammed Omarjee](https://github.com/M-Omarjee), Resident Doctor
-(MBBS, King's College London). Interested in AI tooling that supports clinical
-reasoning rather than replacing it.
+<div align="center">
+
+Built by [Muhammed Omarjee](https://github.com/M-Omarjee), Resident Doctor (MBBS, King's College London).
+
+*Interested in AI tooling that supports clinical reasoning rather than replacing it.*
+
+</div>
