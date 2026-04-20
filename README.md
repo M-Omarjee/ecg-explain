@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="figures/banner.png" alt="ECG-Explain banner" width="100%">
+</div>
+
 # ECG-Explain
 
 > A 12-lead ECG classifier that surfaces *why* it predicts what it predicts —
@@ -26,6 +30,20 @@ and stops. **ECG-Explain** is built around the principle that an AI tool that
 can't show its working has no place in clinical decision-making. Every
 prediction is paired with a per-lead heatmap localising the waveform features
 the model attended to. Whether the model is right or wrong, you can see *why*.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[12-lead ECG<br/>10s @ 100Hz] --> B[Bandpass filter<br/>+ z-normalise]
+    B --> C[1D ResNet<br/>~6M params]
+    C --> D[Multi-label logits<br/>NORM/MI/STTC/CD/HYP]
+    C --> E[Conv feature maps<br/>via feature_maps&#40;&#41;]
+    E --> F[1D Grad-CAM]
+    F --> G[Per-timepoint<br/>attribution]
+    D --> H[Clinical 12-lead plot<br/>+ heatmap overlay]
+    G --> H
+```
 
 ## Highlights
 
