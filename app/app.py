@@ -105,9 +105,17 @@ def predict_and_explain(
         return _placeholder_figure("Pick or upload a record"), "No record selected."
 
     record_path = Path(record_path)
+
+    # Gradio copies only the uploaded .hea into a temp dir and loses the .dat.
+    # If this filename matches one of our bundled examples, redirect to that path.
+    example_match = EXAMPLES_DIR / record_path.name
+    if example_match.exists():
+        record_path = example_match
+
     # WFDB wants the path without extension
     if record_path.suffix in {".hea", ".dat"}:
         record_path = record_path.with_suffix("")
+    
 
     try:
         raw = load_record(record_path)
