@@ -12,17 +12,20 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import torch
-
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.data.labels import SUPERCLASS_TO_IDX, SUPERCLASSES
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.training import get_device
 from ecg_explain.viz import plot_prediction_summary
-from scripts.train import build_model
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from scripts.train import build_model  # noqa: E402
 
 
 def main(

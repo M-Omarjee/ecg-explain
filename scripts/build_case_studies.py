@@ -15,20 +15,23 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
-
 from ecg_explain.config import FullConfig
 from ecg_explain.data import PTBXLDataset
 from ecg_explain.data.labels import SUPERCLASSES
 from ecg_explain.interpret import GradCAM1D
 from ecg_explain.training import get_device
 from ecg_explain.viz import plot_prediction_summary
-from scripts.train import build_model
+from torch.utils.data import DataLoader
+from tqdm.auto import tqdm
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from scripts.train import build_model  # noqa: E402
 
 
 @torch.no_grad()
