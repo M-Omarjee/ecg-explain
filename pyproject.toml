@@ -42,12 +42,6 @@ packages = ["src/ecg_explain"]
 [tool.uv]
 package = true
 
-[tool.uv.sources]
-ecg-explain = { workspace = true }
-
-[tool.uv.workspace]
-members = ["."]
-
 [tool.mypy]
 python_version = "3.11"
 warn_unused_configs = true
