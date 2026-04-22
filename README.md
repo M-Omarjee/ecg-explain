@@ -17,6 +17,11 @@
 
 </div>
 
+## 🚀 Live Demo
+
+Try the app here:  
+👉 https://huggingface.co/spaces/M-Omarjee/ecg-explain
+
 ## Motivation
 
 In hospital, no decision happens because of one number on a screen. Every
