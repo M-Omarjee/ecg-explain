@@ -42,18 +42,22 @@ multiple splits.
 
 ## Evaluation
 
+## Evaluation
+
 Headline metric: macro-averaged AUROC across the 5 superclasses on PTB-XL fold 10.
 
-_Numbers to be filled in after the first headline training run._
+| Class  | AUROC  | F1 (@0.5) |
+|--------|--------|-----------|
+| NORM   | 0.9388 | 0.8450    |
+| MI     | 0.9162 | 0.7084    |
+| STTC   | 0.9263 | 0.7230    |
+| CD     | 0.9216 | 0.6968    |
+| HYP    | 0.8360 | 0.3985    |
+| **Macro** | **0.9078** | **0.6744** |
 
-| Class  | AUROC | F1 (@0.5) |
-|--------|-------|-----------|
-| NORM   | _TBD_ | _TBD_     |
-| MI     | _TBD_ | _TBD_     |
-| STTC   | _TBD_ | _TBD_     |
-| CD     | _TBD_ | _TBD_     |
-| HYP    | _TBD_ | _TBD_     |
-| Macro  | _TBD_ | _TBD_     |
+Early stopping selected epoch 8. Training ran for 13 epochs total before
+patience-5 early stopping triggered. Full training history in
+`checkpoints/baseline/history.json`.
 
 ## Known limitations
 

@@ -1,0 +1,48 @@
+{
+  "checkpoint": "checkpoints/baseline/best.pt",
+  "config": {
+    "data": {
+      "data_dir": "data/raw/ptbxl",
+      "sampling_rate": 100,
+      "apply_filter": true,
+      "apply_normalisation": true
+    },
+    "model": {
+      "name": "resnet1d_medium",
+      "n_classes": 5,
+      "n_leads": 12
+    },
+    "training": {
+      "epochs": 30,
+      "batch_size": 32,
+      "lr": 0.001,
+      "weight_decay": 0.0001,
+      "early_stopping_patience": 5,
+      "grad_clip": 1.0,
+      "seed": 42,
+      "device": "auto",
+      "num_workers": 0,
+      "checkpoint_dir": "checkpoints/baseline",
+      "use_class_weighting": true
+    }
+  },
+  "metrics": {
+    "macro_auroc": 0.90775029095932,
+    "per_class_auroc": {
+      "NORM": 0.9387913467763309,
+      "MI": 0.916165196743555,
+      "STTC": 0.9262613483538658,
+      "CD": 0.9215771903264625,
+      "HYP": 0.8359563725963861
+    },
+    "macro_f1": 0.6743613335187559,
+    "per_class_f1": {
+      "NORM": 0.8450413223140496,
+      "MI": 0.7084233261339092,
+      "STTC": 0.7230273752012882,
+      "CD": 0.6968472109943411,
+      "HYP": 0.39846743295019155
+    }
+  },
+  "n_test_samples": 2158
+}

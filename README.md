@@ -57,90 +57,178 @@ flowchart LR
 
 ## Results
 
+## Results
+
 Trained on PTB-XL stratified folds 1–8, validated on fold 9, tested on fold 10.
+Best checkpoint at epoch 8 (early stopping patience 5). Full hyperparameters
+in [`configs/baseline.yaml`](configs/baseline.yaml); full metrics JSON in
+[`results/baseline_test_metrics.json`](results/baseline_test_metrics.json).
 
-| Class  | Test AUROC |
-|--------|------------|
-| NORM   | _TBD_      |
-| MI     | _TBD_      |
-| STTC   | _TBD_      |
-| CD     | _TBD_      |
-| HYP    | _TBD_      |
-| **Macro** | **_TBD_** |
+| Class  | Test AUROC | Test F1 (@0.5) |
+|--------|------------|----------------|
+| NORM   | 0.9388     | 0.8450         |
+| MI     | 0.9162     | 0.7084         |
+| STTC   | 0.9263     | 0.7230         |
+| CD     | 0.9216     | 0.6968         |
+| HYP    | 0.8360     | 0.3985         |
+| **Macro** | **0.9078** | **0.6744**   |
 
-_Numbers will be filled in after the first headline training run. See
-[`results/`](results/) for the full metrics JSON._
+For reference, the strongest published baseline on this split (Strodthoff
+et al. 2020, Nature Scientific Data) reports macro AUROC ~0.925 with
+significantly longer training and a larger model.
 
 ## Case studies
 
-The model interpreting six representative test set ECGs. Heatmap intensity
-indicates Grad-CAM attribution for the named class. _Captions reflect my
-clinical reading alongside what the model attended to — to be finalised
-once the model is trained._
+Six representative test-set ECGs with the model's predictions and Grad-CAM
+attribution. Captions combine what the model produced with my reading of the
+underlying ECG.
 
-### Correct: Normal sinus rhythm
+> **Honest note on Grad-CAM.** On 1D signals the attribution maps produced
+> by vanilla Grad-CAM are typically diffuse — the large effective receptive
+> field of the final convolutional layer smears gradients across the full
+> 10-second window. These heatmaps are genuine, but they do not support
+> beat-level or feature-level localisation claims. Read them as "the model
+> used the whole signal" rather than "the model looked at the ST segment."
+> See the limitations section of the [model card](MODEL_CARD.md).
+
+### Correct: Normal sinus rhythm (test idx 382)
+
 ![Correct NORM](figures/case_studies/correct_NORM.png)
 
-> **Predicted:** NORM — _confidence to be filled in_
+> **Predicted:** NORM = 1.00, all other classes ≈ 0
 > **True label:** NORM
-> **Attention falls on:** _to be described after training_
-> **Clinical reading:** _to be added — expected attention to be diffuse,
-> with no concentration on any pathological feature._
+> **Clinical reading:** Regular narrow-complex rhythm at ~70 bpm. P-waves
+> precede each QRS. No acute ST or T-wave changes. aVL shows baseline
+> muscle artifact but the model was not misled by it.
 
-### Correct: Myocardial infarction
+### Correct: Myocardial infarction (test idx 784)
+
 ![Correct MI](figures/case_studies/correct_MI.png)
 
-> **Predicted:** MI — _confidence to be filled in_
+> **Predicted:** MI = 1.00 (NORM, STTC, CD, HYP all < 0.30)
 > **True label:** MI
-> **Attention falls on:** _to be described — expected to localise on the ST
-> segment in the inferior leads (II, III, aVF) for inferior MI, or anterior
-> leads (V2-V4) for anterior MI._
-> **Clinical reading:** _to be added._
+> **Clinical reading:** Fragmented QRS complexes with Q-waves apparent in
+> the inferior leads (II, III, aVF) and T-wave abnormalities in the
+> lateral leads — consistent with old infarction. The model is very
+> confident and correctly holds the other classes down despite some
+> co-occurrent abnormalities.
 
-### Correct: ST/T changes
+### Correct: ST/T changes (test idx 930)
+
 ![Correct STTC](figures/case_studies/correct_STTC.png)
 
-> **Predicted:** STTC — _confidence to be filled in_
+> **Predicted:** STTC = 1.00, HYP = 0.99
 > **True label:** STTC
-> **Attention falls on:** _to be described — expected to focus on the
-> repolarisation phase (T-wave region)._
-> **Clinical reading:** _to be added._
+> **Clinical reading:** Sinus rhythm with broad, flattened T-waves and
+> ST depression across the lateral leads (V4–V6). The model also fires
+> HYP here — clinically reasonable, as LVH with strain commonly
+> co-occurs with repolarisation changes. This is multi-label
+> classification working as intended.
 
-### Correct: Conduction disturbance
+### Correct: Conduction disturbance (test idx 1139)
+
 ![Correct CD](figures/case_studies/correct_CD.png)
 
-> **Predicted:** CD — _confidence to be filled in_
+> **Predicted:** CD = 1.00, HYP = 0.69
 > **True label:** CD
-> **Attention falls on:** _to be described — expected to focus on the QRS
-> complex, particularly its duration and morphology._
-> **Clinical reading:** _to be added._
+> **Clinical reading:** Wide QRS complexes with bundle-branch morphology —
+> a notched "M" pattern in V1 and broadened terminal S-waves elsewhere.
+> Rate is slightly bradycardic. The model is certain about the
+> conduction abnormality and raises HYP as a plausible co-finding.
 
-### Correct: Hypertrophy
+### Correct: Hypertrophy (test idx 67)
+
 ![Correct HYP](figures/case_studies/correct_HYP.png)
 
-> **Predicted:** HYP — _confidence to be filled in_
+> **Predicted:** HYP = 0.99, STTC = 0.99
 > **True label:** HYP
-> **Attention falls on:** _to be described — expected to focus on QRS
-> amplitude in the precordial leads (V-leads), reflecting voltage criteria
-> for hypertrophy._
-> **Clinical reading:** _to be added._
+> **Clinical reading:** Textbook LVH voltage — very tall R-waves in I,
+> II, V5, V6 with deep S-waves in V1–V3, clearly meeting Sokolow–Lyon
+> criteria. Repolarisation is also affected (the "strain pattern"),
+> which is why STTC fires at 0.99. HYP is the one class the model is
+> weakest on overall (see failure analysis), but when voltage criteria
+> are this overt, the prediction is reliable.
 
-### Failure: high-confidence wrong prediction
+### Failure: Overprediction on a noisy ECG (test idx 1526)
+
 ![Failure case](figures/case_studies/failure_high_confidence.png)
 
-> **Predicted:** _to be filled in_
-> **True label:** _to be filled in_
-> **Attention falls on:** _to be described._
-> **Why it failed:** _to be analysed — was attention on the right region
-> but interpretation wrong, or was attention on a clinically irrelevant
-> region?_
-> **What this teaches us:** _to be added._
+> **Predicted:** MI = 0.91, STTC = 0.61, CD = 1.00, HYP = 0.51
+> **True label:** MI *only*
+> **Clinical reading:** This is a poor-quality recording. aVR is dominated
+> by high-frequency artifact, the rhythm in lead I looks irregular with
+> possible ectopy or AF with aberrancy, and multiple leads show wide,
+> variable-morphology complexes. The model correctly identifies MI but
+> also flags CD (reacting to the wide complexes), STTC (reacting to the
+> abnormal repolarisation from ectopics) and borderline HYP. In other
+> words, faced with noisy and morphologically unusual data, the model
+> degrades toward **overprediction of abnormality** — not the more
+> dangerous alternative of missing pathology. Useful to know.
 
 ## Failure analysis
 
-This section is the unfair advantage of having a doctor build the model. It's
-also what would have to exist before any version of this could be used in
-practice.
+This section is the unfair advantage of having a doctor build the model. It
+is also what would have to exist before any version of this could be used
+in practice.
+
+### Per-class reliability
+
+| Class  | AUROC  | F1 (@0.5) | Reliability notes |
+|--------|--------|-----------|-------------------|
+| NORM   | 0.9388 | 0.8450    | Strongest class. When the model says "normal," it is usually correct. |
+| STTC   | 0.9263 | 0.7230    | Good — ST/T changes are a relatively distinct pattern at this resolution. |
+| CD     | 0.9216 | 0.6968    | Good for overt bundle-branch morphology; subtle intraventricular delays untested. |
+| MI     | 0.9162 | 0.7084    | Good overall, but subtype (anterior vs inferior, STEMI vs NSTEMI) is not distinguished. |
+| HYP    | 0.8360 | 0.3985    | **Clearly the weakest class.** F1 below 0.40 at the default threshold. |
+| **Macro** | **0.9078** | **0.6744** | Within published PTB-XL benchmark range (0.92 SOTA at 100 Hz). |
+
+### Why HYP underperforms
+
+HYP is only ~12% of the training data — roughly half the prevalence of MI
+or STTC. Voltage-based diagnoses are also harder at 100 Hz than at 500 Hz
+(sharp features are smoothed), and voltage criteria interact with patient
+body habitus and electrode placement, which the model cannot see. The
+case-study HYP record above is correctly called because the voltage
+criteria are overt — subtler LVH is where this model will miss.
+
+### Attribution concordance
+
+Vanilla 1D Grad-CAM produced diffuse attribution maps across the full
+10-second window for all six case studies (see the "Honest note" above
+the gallery). This is a known limitation of Grad-CAM on long 1D signals
+with deep receptive fields. I have not attempted quantitative
+concordance analysis (e.g. fraction of attribution mass inside the
+expected lead region per class) because the maps are simply not sharp
+enough for that kind of analysis to be meaningful here.
+
+Better localisation for 1D ECG is an open problem — candidate methods
+to explore next include Integrated Gradients, Layer-CAM, and
+occlusion-based attribution over short windows.
+
+### Failure mode: graceful degradation toward overprediction
+
+The case-study failure is illustrative: on a noisy, morphologically
+unusual recording the model correctly identified MI but also over-fired
+CD, STTC and borderline HYP. This is a *safer* failure mode than the
+alternative (missing pathology on a clean recording), but it means the
+model's outputs on low-quality signals should not be taken at face
+value. A triage version of this system would need an explicit
+signal-quality gate.
+
+### How a clinician should and should not use this
+
+**Appropriate uses:**
+
+- Educational exploration of how a model interprets ECG morphology
+- Teaching explainability methods on biomedical signals
+- Hypothesis generation for further research
+
+**Inappropriate uses:**
+
+- Sole or primary basis for clinical decisions
+- Replacement for cardiologist review of any ECG
+- Use on populations or equipment not represented in PTB-XL without re-validation
+- Use in any acute or time-critical setting
 
 ### Per-class reliability
 
