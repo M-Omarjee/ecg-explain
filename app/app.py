@@ -115,7 +115,6 @@ def predict_and_explain(
     # WFDB wants the path without extension
     if record_path.suffix in {".hea", ".dat"}:
         record_path = record_path.with_suffix("")
-    
 
     try:
         raw = load_record(record_path)
